@@ -26,12 +26,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [actions, javascript-typescript]
+        language: [actions]
         # PHP is not supported by CodeQL — WordPress Coding Standards + the
-        # plugin-check workflow cover PHP static analysis instead. The
-        # javascript-typescript scan is kept here as a safety net in case
-        # JS/TS code is added later; "actions" audits the workflow files
-        # themselves for supply-chain / injection risks.
+        # WordPress Plugin Check workflow cover PHP static analysis. The
+        # "actions" scan audits the workflow files themselves for
+        # supply-chain / injection risks. Add "javascript-typescript" to
+        # this list if JS/TS code is ever added to the plugin.
 
     steps:
       - name: Checkout

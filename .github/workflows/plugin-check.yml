@@ -19,12 +19,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Build distribution to scan
+        run: |
+          # Scan exactly what ships to users, not the repo-only files such
+          # as .wordpress-org assets, CI config and development docs.
+          mkdir -p /tmp/plugin-dist/email-api-mailer-for-cyberpanel
+          rsync -a \
+            --exclude='.git/' \
+            --exclude-from='.distignore' \
+            ./ /tmp/plugin-dist/email-api-mailer-for-cyberpanel/
+          echo "=== Distribution contents ==="
+          find /tmp/plugin-dist/email-api-mailer-for-cyberpanel -maxdepth 2 | sort
+
       - name: Run Plugin Check
         uses: wordpress/plugin-check-action@v1
         with:
-          # Match WordPress.org Plugin Directory review rules.
-          build-dir: './'
-          exclude-directories: '.github,.wordpress-org,languages'
+          build-dir: /tmp/plugin-dist/email-api-mailer-for-cyberpanel
           # Warnings are reported but do not fail the build; errors still fail.
-          # Remove this line to make warnings blocking.
+          # Uncomment to make warnings blocking:
           # fail-on-warnings: true

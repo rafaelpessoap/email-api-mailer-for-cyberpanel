@@ -69,17 +69,23 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 		 * Bootstrap hooks.
 		 */
 		private function __construct() {
-			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+			add_action( 'init', array( $this, 'load_textdomain' ) );
 			add_action( 'admin_init', array( $this, 'maybe_migrate_legacy_options' ) );
 			add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 			add_action( 'admin_init', array( $this, 'register_settings' ) );
 			add_action( 'admin_post_cyberpanel_email_test', array( $this, 'handle_test_email' ) );
 			add_action( 'admin_post_cyberpanel_email_check_now', array( $this, 'handle_check_now' ) );
 			add_action( self::CRON_HOOK, array( $this, 'check_delivery_status' ) );
+			add_filter( 'pre_wp_mail', array( __CLASS__, 'filter_pre_wp_mail' ), 10, 2 );
 		}
 
 		/**
-		 * Load translations.
+		 * Load bundled translations.
+		 *
+		 * Needed so users who install the plugin from GitHub (outside the WP
+		 * Plugin Directory) still get the bundled pt_BR `.mo` loaded. On sites
+		 * installing through wordpress.org the just-in-time loader also finds
+		 * translations under WP_LANG_DIR/plugins/, so both delivery paths work.
 		 */
 		public function load_textdomain() {
 			load_plugin_textdomain(
@@ -488,7 +494,15 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 					<div style="flex:1;min-width:220px;">
 						<h3 style="margin:0 0 8px;font-size:14px;color:#1d2327;"><?php esc_html_e( 'Account', 'email-api-mailer-for-cyberpanel' ); ?></h3>
 						<table style="width:100%;border-collapse:collapse;">
-							<tr><td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Plan', 'email-api-mailer-for-cyberpanel' ); ?></td><td style="padding:4px 8px;"><strong><?php echo esc_html( ucfirst( $plan ) ); ?></strong><?php if ( '' !== $status_acc ) echo ' <span style="color:#00a32a;font-size:12px;">(' . esc_html( $status_acc ) . ')</span>'; ?></td></tr>
+							<tr>
+								<td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Plan', 'email-api-mailer-for-cyberpanel' ); ?></td>
+								<td style="padding:4px 8px;">
+									<strong><?php echo esc_html( ucfirst( $plan ) ); ?></strong>
+									<?php if ( '' !== $status_acc ) : ?>
+										<span style="color:#00a32a;font-size:12px;">(<?php echo esc_html( $status_acc ); ?>)</span>
+									<?php endif; ?>
+								</td>
+							</tr>
 							<tr><td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Reputation', 'email-api-mailer-for-cyberpanel' ); ?></td><td style="padding:4px 8px;"><strong><?php echo esc_html( (string) $reputation ); ?></strong>/100</td></tr>
 							<tr><td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Verified domains', 'email-api-mailer-for-cyberpanel' ); ?></td><td style="padding:4px 8px;"><strong><?php echo esc_html( (string) $domains ); ?></strong></td></tr>
 							<tr><td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Rate limit', 'email-api-mailer-for-cyberpanel' ); ?></td><td style="padding:4px 8px;"><span style="font-size:12px;"><?php echo esc_html( (string) $rate_min ); ?>/min &bull; <?php echo esc_html( (string) $rate_hour ); ?>/h &bull; <?php echo esc_html( (string) $rate_day ); ?>/<?php esc_html_e( 'day', 'email-api-mailer-for-cyberpanel' ); ?></span></td></tr>
@@ -506,8 +520,24 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 					<div style="flex:1;min-width:220px;">
 						<h3 style="margin:0 0 8px;font-size:14px;color:#1d2327;"><?php esc_html_e( 'Engagement', 'email-api-mailer-for-cyberpanel' ); ?></h3>
 						<table style="width:100%;border-collapse:collapse;">
-							<tr><td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Opened', 'email-api-mailer-for-cyberpanel' ); ?></td><td style="padding:4px 8px;"><strong style="color:#2271b1;"><?php echo esc_html( (string) $opened ); ?></strong><?php if ( is_numeric( $opened ) && is_numeric( $delivered ) && (int) $delivered > 0 ) echo ' <span style="font-size:12px;color:#646970;">(' . esc_html( (string) round( ( (int) $opened / (int) $delivered ) * 100, 1 ) ) . '%)</span>'; ?></td></tr>
-							<tr><td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Clicked', 'email-api-mailer-for-cyberpanel' ); ?></td><td style="padding:4px 8px;"><strong style="color:#2271b1;"><?php echo esc_html( (string) $clicked ); ?></strong><?php if ( is_numeric( $clicked ) && is_numeric( $delivered ) && (int) $delivered > 0 ) echo ' <span style="font-size:12px;color:#646970;">(' . esc_html( (string) round( ( (int) $clicked / (int) $delivered ) * 100, 1 ) ) . '%)</span>'; ?></td></tr>
+							<tr>
+								<td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Opened', 'email-api-mailer-for-cyberpanel' ); ?></td>
+								<td style="padding:4px 8px;">
+									<strong style="color:#2271b1;"><?php echo esc_html( (string) $opened ); ?></strong>
+									<?php if ( is_numeric( $opened ) && is_numeric( $delivered ) && (int) $delivered > 0 ) : ?>
+										<span style="font-size:12px;color:#646970;">(<?php echo esc_html( (string) round( ( (int) $opened / (int) $delivered ) * 100, 1 ) ); ?>%)</span>
+									<?php endif; ?>
+								</td>
+							</tr>
+							<tr>
+								<td style="padding:4px 8px;color:#646970;"><?php esc_html_e( 'Clicked', 'email-api-mailer-for-cyberpanel' ); ?></td>
+								<td style="padding:4px 8px;">
+									<strong style="color:#2271b1;"><?php echo esc_html( (string) $clicked ); ?></strong>
+									<?php if ( is_numeric( $clicked ) && is_numeric( $delivered ) && (int) $delivered > 0 ) : ?>
+										<span style="font-size:12px;color:#646970;">(<?php echo esc_html( (string) round( ( (int) $clicked / (int) $delivered ) * 100, 1 ) ); ?>%)</span>
+									<?php endif; ?>
+								</td>
+							</tr>
 						</table>
 					</div>
 				</div>
@@ -540,8 +570,9 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 			}
 			check_admin_referer( 'cyberpanel_email_test' );
 
-			$raw_to = isset( $_POST['test_to'] ) ? wp_unslash( $_POST['test_to'] ) : '';
-			$to     = sanitize_email( $raw_to );
+			$to = isset( $_POST['test_to'] )
+				? sanitize_email( wp_unslash( $_POST['test_to'] ) )
+				: '';
 
 			if ( '' === $to || ! is_email( $to ) ) {
 				$this->redirect_with_notice(
@@ -810,6 +841,39 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 				}
 				wp_schedule_single_event( time() + 180, self::CRON_HOOK );
 			}
+		}
+
+		/**
+		 * Short-circuit wp_mail() through the pre_wp_mail filter (WP 5.7+).
+		 *
+		 * Returning null means "let WordPress's default mailer run"; returning
+		 * a boolean short-circuits wp_mail() and reports success/failure.
+		 * We opt in only when the plugin toggle is enabled and the message
+		 * carries no attachments (the API does not accept them yet).
+		 *
+		 * @param null|bool $short_circuit Existing short-circuit value.
+		 * @param array     $atts          Arguments passed to wp_mail().
+		 * @return null|bool
+		 */
+		public static function filter_pre_wp_mail( $short_circuit, $atts ) {
+			if ( null !== $short_circuit ) {
+				return $short_circuit;
+			}
+			if ( ! get_option( self::OPT_ENABLED, false ) ) {
+				return null;
+			}
+			if ( ! empty( $atts['attachments'] ) ) {
+				// The API does not support attachments yet; let core handle these.
+				return null;
+			}
+
+			return self::send(
+				isset( $atts['to'] ) ? $atts['to'] : '',
+				isset( $atts['subject'] ) ? $atts['subject'] : '',
+				isset( $atts['message'] ) ? $atts['message'] : '',
+				isset( $atts['headers'] ) ? $atts['headers'] : '',
+				isset( $atts['attachments'] ) ? $atts['attachments'] : array()
+			);
 		}
 
 		/**
@@ -1098,37 +1162,3 @@ Cyberpanel_Email_API::get_instance();
 // Activation and deactivation hooks.
 register_activation_hook( __FILE__, array( 'Cyberpanel_Email_API', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Cyberpanel_Email_API', 'deactivate' ) );
-
-/**
- * Short-circuit wp_mail() through the pre_wp_mail filter (WP 5.7+).
- *
- * Returning null from this filter means "let WordPress's default mailer run";
- * returning a boolean short-circuits wp_mail() and reports success/failure.
- * We opt in only when the plugin toggle is enabled and the message carries no
- * attachments (the Cyberpanel email API does not accept them yet).
- *
- * @param null|bool $return null to fall through to core, bool to short-circuit.
- * @param array     $atts   Arguments passed to wp_mail() after the 'wp_mail' filter.
- * @return null|bool
- */
-add_filter( 'pre_wp_mail', 'cyberpanel_email_pre_wp_mail', 10, 2 );
-function cyberpanel_email_pre_wp_mail( $return, $atts ) {
-	if ( null !== $return ) {
-		return $return;
-	}
-	if ( ! get_option( Cyberpanel_Email_API::OPT_ENABLED, false ) ) {
-		return null;
-	}
-	if ( ! empty( $atts['attachments'] ) ) {
-		// The API does not support attachments yet; let core handle these.
-		return null;
-	}
-
-	return Cyberpanel_Email_API::send(
-		isset( $atts['to'] ) ? $atts['to'] : '',
-		isset( $atts['subject'] ) ? $atts['subject'] : '',
-		isset( $atts['message'] ) ? $atts['message'] : '',
-		isset( $atts['headers'] ) ? $atts['headers'] : '',
-		isset( $atts['attachments'] ) ? $atts['attachments'] : array()
-	);
-}
