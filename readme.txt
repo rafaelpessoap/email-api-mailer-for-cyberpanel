@@ -4,7 +4,7 @@ Tags: email, smtp, transactional email, cyberpanel, wp_mail
 Requires at least: 5.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ Under `wp-content/uploads/cyberpanel-email/cyberpanel-email.log.php`. The file s
 3. Delivery tracking panel and colored activity log.
 
 == Changelog ==
+
+= 2.0.2 =
+* Added a **Settings** shortcut on the Plugins list page, next to Activate/Deactivate, for faster access to the plugin configuration.
+* Fixed the Brazilian Portuguese translation of the plugin name that was left at the pre-rename value ("Cyberpanel API Email para WordPress"). Now correctly shows as "Email API Mailer para Cyberpanel".
 
 = 2.0.1 =
 * Bumped "Tested up to" from 6.7 to 6.9 for current WordPress eligibility.

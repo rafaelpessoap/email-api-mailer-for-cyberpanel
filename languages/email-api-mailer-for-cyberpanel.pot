@@ -172,3 +172,6 @@ msgstr ""
 
 msgid "Send & Delivery Log (last 30)"
 msgstr ""
+
+msgid "Settings"
+msgstr ""

@@ -26,7 +26,7 @@ msgid "You do not have permission to access this page."
 msgstr "Você não tem permissão para acessar esta página."
 
 msgid "Email API Mailer for Cyberpanel"
-msgstr "Cyberpanel API Email para WordPress"
+msgstr "Email API Mailer para Cyberpanel"
 
 msgid "Enable"
 msgstr "Ativar"
@@ -174,3 +174,6 @@ msgstr "Verificação de entrega executada."
 
 msgid "Send & Delivery Log (last 30)"
 msgstr "Log de envios e entregas (últimos 30)"
+
+msgid "Settings"
+msgstr "Configurações"

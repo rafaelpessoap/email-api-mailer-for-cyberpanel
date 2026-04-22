@@ -3,7 +3,7 @@
  * Plugin Name:       Email API Mailer for Cyberpanel
  * Plugin URI:        https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel
  * Description:       Send WordPress emails through the Cyberpanel transactional email REST API, replacing the default wp_mail(). Includes smart delivery tracking, account statistics dashboard, and graceful fallback to the standard PHP mailer when disabled. Not affiliated with Cyberpanel.
- * Version:           2.0.1
+ * Version:           2.0.2
  * Author:            Rafael Pessoa
  * Author URI:        https://arsenalcraft.com.br
  * License:           GPL v2 or later
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 	 */
 	final class Cyberpanel_Email_API {
 
-		const VERSION      = '2.0.1';
+		const VERSION      = '2.0.2';
 		const TEXT_DOMAIN  = 'email-api-mailer-for-cyberpanel';
 		const API_BASE     = 'https://platform.cyberpersons.com/email/v1';
 		const SLUG         = 'cyberpanel-api-email';
@@ -77,6 +77,25 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 			add_action( 'admin_post_cyberpanel_email_check_now', array( $this, 'handle_check_now' ) );
 			add_action( self::CRON_HOOK, array( $this, 'check_delivery_status' ) );
 			add_filter( 'pre_wp_mail', array( __CLASS__, 'filter_pre_wp_mail' ), 10, 2 );
+			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( __CLASS__, 'add_settings_action_link' ) );
+		}
+
+		/**
+		 * Add a "Settings" shortcut on the Plugins list page next to the
+		 * Activate/Deactivate link.
+		 *
+		 * @param array $links Existing action links.
+		 * @return array
+		 */
+		public static function add_settings_action_link( $links ) {
+			$settings_url  = admin_url( 'options-general.php?page=' . self::SLUG );
+			$settings_link = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $settings_url ),
+				esc_html__( 'Settings', 'email-api-mailer-for-cyberpanel' )
+			);
+			array_unshift( $links, $settings_link );
+			return $links;
 		}
 
 		/**
