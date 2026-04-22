@@ -4,7 +4,7 @@ Tags: email, smtp, transactional email, cyberpanel, wp_mail
 Requires at least: 5.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,12 @@ Under `wp-content/uploads/cyberpanel-email/cyberpanel-email.log.php`. The file s
 3. Delivery tracking panel and colored activity log.
 
 == Changelog ==
+
+= 2.0.1 =
+* Bumped "Tested up to" from 6.7 to 6.9 for current WordPress eligibility.
+* Uninstall routine now uses `WP_Filesystem()` to remove the log directory.
+* Internal refactor: `pre_wp_mail` callback moved into the main class; translation loading moved to the `init` hook.
+* Readability cleanup in the dashboard rendering.
 
 = 2.0.0 =
 * Renamed plugin to "Email API Mailer for Cyberpanel" and published as open source.

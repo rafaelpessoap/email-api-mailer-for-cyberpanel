@@ -4,6 +4,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-04-22
+
+### Changed
+
+- Bumped the declared compatibility from "Tested up to: 6.7" to "Tested up to: 6.9" so the plugin is eligible for the current WordPress release.
+- Uninstall routine now uses `WP_Filesystem()->delete()` instead of direct `rmdir()`/`unlink()` calls, matching WordPress Plugin Directory review guidelines.
+- Moved the `pre_wp_mail` filter callback into the main plugin class and the translation loading into the `init` hook. No user-visible change.
+
+### Fixed
+
+- Inline control structures in the settings dashboard replaced with explicit multi-line blocks for readability.
+- `handle_test_email()` sanitizes `$_POST['test_to']` at the point of access so every static analyzer can verify the path.
+
 ## [2.0.0] - 2026-04-22
 
 ### Added
