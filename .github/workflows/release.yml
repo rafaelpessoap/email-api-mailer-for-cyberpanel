@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Cut GitHub Release (+ optional WP.org deploy)
+    runs-on: ubuntu-latest
+
+    env:
+      SLUG: email-api-mailer-for-cyberpanel
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Tag version: ${VERSION}"
+
+      - name: Verify version consistency (tag / plugin header / Stable tag)
+        run: |
+          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+          PLUGIN_VERSION=$(grep -E '^\s*\*\s*Version:' "${SLUG}.php" | sed -E 's/.*Version:\s*//' | tr -d ' \r')
+          README_STABLE=$(grep -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d ' \r')
+
+          echo "Tag:          ${TAG_VERSION}"
+          echo "Plugin header Version: ${PLUGIN_VERSION}"
+          echo "readme.txt Stable tag: ${README_STABLE}"
+
+          if [ "${PLUGIN_VERSION}" != "${TAG_VERSION}" ]; then
+            echo "::error title=Version mismatch::Plugin header Version (${PLUGIN_VERSION}) does not match the tag (${TAG_VERSION}). Bump it before tagging."
+            exit 1
+          fi
+          if [ "${README_STABLE}" != "${TAG_VERSION}" ]; then
+            echo "::error title=Version mismatch::readme.txt Stable tag (${README_STABLE}) does not match the tag (${TAG_VERSION}). Bump it before tagging."
+            exit 1
+          fi
+
+      - name: Extract release notes from CHANGELOG
+        id: notes
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          awk -v v="${VERSION}" '
+            BEGIN { inblock=0 }
+            $0 ~ "^## \\[" v "\\]" { inblock=1; next }
+            inblock && /^## \[/ { exit }
+            inblock { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+
+          if [ ! -s /tmp/release-notes.md ]; then
+            echo "No CHANGELOG entry for ${VERSION}; falling back to auto-generated notes." > /tmp/release-notes.md
+          fi
+          echo "----- Release notes -----"
+          cat /tmp/release-notes.md
+          echo "-------------------------"
+
+      - name: Build plugin ZIP
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          BUILD_DIR="/tmp/${SLUG}"
+          rm -rf "${BUILD_DIR}"
+          mkdir -p "${BUILD_DIR}"
+
+          # rsync interprets .distignore one pattern per line; the leading "/"
+          # in the file makes each pattern root-relative.
+          rsync -a \
+            --exclude='.git/' \
+            --exclude-from='.distignore' \
+            ./ "${BUILD_DIR}/"
+
+          cd /tmp && zip -r "${SLUG}-${VERSION}.zip" "${SLUG}" -x '*.DS_Store'
+          ls -la "/tmp/${SLUG}-${VERSION}.zip"
+
+          echo "=== ZIP contents ==="
+          unzip -l "/tmp/${SLUG}-${VERSION}.zip" | head -40
+
+          # Sanity: CLAUDE.md, .git, .github, .wordpress-org must NOT be inside.
+          if unzip -l "/tmp/${SLUG}-${VERSION}.zip" | grep -E '(CLAUDE\.md|\.git/|\.github/|\.wordpress-org/)' ; then
+            echo "::error::ZIP contains files that should have been excluded."
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: /tmp/release-notes.md
+          files: /tmp/${{ env.SLUG }}-${{ steps.version.outputs.VERSION }}.zip
+          draft: false
+          prerelease: false
+
+      - name: Check for WordPress.org SVN credentials
+        id: check-wporg
+        run: |
+          if [ -n "${{ secrets.WPORG_SVN_USERNAME }}" ] && [ -n "${{ secrets.WPORG_SVN_PASSWORD }}" ]; then
+            echo "has_secrets=true" >> "$GITHUB_OUTPUT"
+            echo "SVN credentials found — will deploy to WordPress.org."
+          else
+            echo "has_secrets=false" >> "$GITHUB_OUTPUT"
+            echo "SVN credentials not set (WPORG_SVN_USERNAME / WPORG_SVN_PASSWORD). Skipping WP.org deploy."
+          fi
+
+      - name: Deploy to WordPress.org SVN (trunk + tag)
+        if: steps.check-wporg.outputs.has_secrets == 'true'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
+          SLUG: ${{ env.SLUG }}
+          VERSION: ${{ steps.version.outputs.VERSION }}
+
+      - name: Sync WordPress.org assets (icon + banner)
+        if: steps.check-wporg.outputs.has_secrets == 'true'
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
+          SLUG: ${{ env.SLUG }}
