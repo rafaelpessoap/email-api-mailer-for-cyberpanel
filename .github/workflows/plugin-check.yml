@@ -1,0 +1,30 @@
+name: WordPress Plugin Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  plugin-check:
+    name: WordPress.org Plugin Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          # Match WordPress.org Plugin Directory review rules.
+          build-dir: './'
+          exclude-directories: '.github,.wordpress-org,languages'
+          # Warnings are reported but do not fail the build; errors still fail.
+          # Remove this line to make warnings blocking.
+          # fail-on-warnings: true

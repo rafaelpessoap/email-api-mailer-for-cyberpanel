@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Keep GitHub Actions pinned versions fresh and secure.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+    labels:
+      - dependencies
+      - github-actions
+
+  # Composer packages used by the CI toolchain (if a composer.json is ever
+  # added at the repo root). Kept here so future Composer additions are
+  # covered automatically.
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:30"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
+      - composer
