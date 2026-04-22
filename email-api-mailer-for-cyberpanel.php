@@ -3,7 +3,7 @@
  * Plugin Name:       Email API Mailer for Cyberpanel
  * Plugin URI:        https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel
  * Description:       Send WordPress emails through the Cyberpanel transactional email REST API, replacing the default wp_mail(). Includes smart delivery tracking, account statistics dashboard, and graceful fallback to the standard PHP mailer when disabled. Not affiliated with Cyberpanel.
- * Version:           2.0.2
+ * Version:           2.0.3
  * Author:            Rafael Pessoa
  * Author URI:        https://arsenalcraft.com.br
  * License:           GPL v2 or later
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 	 */
 	final class Cyberpanel_Email_API {
 
-		const VERSION      = '2.0.2';
+		const VERSION      = '2.0.3';
 		const TEXT_DOMAIN  = 'email-api-mailer-for-cyberpanel';
 		const API_BASE     = 'https://platform.cyberpersons.com/email/v1';
 		const SLUG         = 'cyberpanel-api-email';

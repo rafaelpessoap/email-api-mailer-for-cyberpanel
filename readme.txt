@@ -4,7 +4,7 @@ Tags: email, smtp, transactional email, cyberpanel, wp_mail
 Requires at least: 5.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,8 @@ Send WordPress emails through the Cyberpanel transactional email REST API with d
 **Email API Mailer for Cyberpanel** replaces the default `wp_mail()` function so every transactional email your WordPress site sends (WooCommerce notifications, password resets, contact-form messages, custom plugin emails) is delivered through the Cyberpanel transactional email REST API instead of the server's default PHP mailer.
 
 I built this plugin after looking for a simple way to connect WordPress to the email service that ships with Cyberpanel and finding no existing plugin that did the job. I needed it for my own sites and decided to share it as open source so anyone running on Cyberpanel can benefit from the same integration.
+
+**This plugin is fully open source.** The source code, issue tracker and release history are public on GitHub: [https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel](https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel). Pull requests, bug reports and translations are welcome.
 
 = Main features =
 
@@ -31,6 +33,17 @@ I built this plugin after looking for a simple way to connect WordPress to the e
 = Data sent to third parties =
 
 When enabled, the plugin sends the following data to `platform.cyberpersons.com` (the Cyberpanel email platform) for every outgoing email: the sender, recipient, subject, message body, reply-to, a `source: wp_mail` metadata tag and the site URL in metadata. API responses (delivery status, open/click counts) are fetched back and stored locally. No data is sent to any other third party.
+
+= Contributing and community =
+
+The plugin lives on GitHub and is developed in the open:
+
+* **Source code and releases**: [github.com/rafaelpessoap/email-api-mailer-for-cyberpanel](https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel)
+* **Bug reports and feature requests**: [github.com/rafaelpessoap/email-api-mailer-for-cyberpanel/issues](https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel/issues)
+* **Security disclosures**: see [SECURITY.md](https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel/blob/main/SECURITY.md) — please use GitHub's private vulnerability reporting rather than opening a public issue.
+* **Contributing guide**: see [CONTRIBUTING.md](https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel/blob/main/CONTRIBUTING.md) for coding standards, how to add a translation, and how releases are cut.
+
+Every release shipped to this directory is mirrored verbatim on the GitHub Releases page so you can always inspect the exact source behind any installed version.
 
 = Disclaimer =
 
@@ -86,6 +99,9 @@ Under `wp-content/uploads/cyberpanel-email/cyberpanel-email.log.php`. The file s
 
 == Changelog ==
 
+= 2.0.3 =
+* Documentation: added an explicit "Contributing and community" section to the readme with pointers to the public GitHub repository, issue tracker, security policy and contribution guide. No code changes.
+
 = 2.0.2 =
 * Added a **Settings** shortcut on the Plugins list page, next to Activate/Deactivate, for faster access to the plugin configuration.
 * Fixed the Brazilian Portuguese translation of the plugin name that was left at the pre-rename value ("Cyberpanel API Email para WordPress"). Now correctly shows as "Email API Mailer para Cyberpanel".
@@ -116,3 +132,5 @@ Major security and i18n release. Your previous settings are migrated automatical
 == Privacy ==
 
 This plugin transmits the content of your outgoing emails (sender, recipient, subject, message body) to the Cyberpanel email platform at `platform.cyberpersons.com` for the sole purpose of delivering those emails, and fetches back their delivery status for display in the admin panel. Refer to the Cyberpanel privacy policy at https://cyberpanel.net for details on how that service processes the data.
+
+No data is sent to the plugin author, to GitHub or to any other third party. All source code can be audited at [github.com/rafaelpessoap/email-api-mailer-for-cyberpanel](https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel).
