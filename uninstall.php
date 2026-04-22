@@ -13,58 +13,74 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-$options_to_delete = array(
-	'cyberpanel_email_api_key',
-	'cyberpanel_email_from_email',
-	'cyberpanel_email_from_name',
-	'cyberpanel_email_enabled',
-	'cyberpanel_email_pending_messages',
-	'cyberpanel_email_account_stats',
-	'cyberpanel_email_migrated_from_legacy',
-	// Legacy option names (pre-2.0.0). Kept here so that users upgrading
-	// from 1.x and uninstalling immediately do not leave orphan rows behind.
-	'cyberpersons_api_key',
-	'cyberpersons_from_email',
-	'cyberpersons_from_name',
-	'cyberpersons_enabled',
-	'cyberpersons_pending_messages',
-	'cyberpersons_account_stats',
-);
+/**
+ * Uninstall routine wrapped in a function so variables stay in local scope
+ * (WordPress coding standards require plugin-scope variables in top-level
+ * files to be prefixed; wrapping avoids the prefix noise here).
+ */
+function cyberpanel_email_run_uninstall() {
+	$options_to_delete = array(
+		'cyberpanel_email_api_key',
+		'cyberpanel_email_from_email',
+		'cyberpanel_email_from_name',
+		'cyberpanel_email_enabled',
+		'cyberpanel_email_pending_messages',
+		'cyberpanel_email_account_stats',
+		'cyberpanel_email_migrated_from_legacy',
+		// Legacy option names (pre-2.0.0). Kept here so users upgrading
+		// from 1.x and uninstalling immediately do not leave orphan rows behind.
+		'cyberpersons_api_key',
+		'cyberpersons_from_email',
+		'cyberpersons_from_name',
+		'cyberpersons_enabled',
+		'cyberpersons_pending_messages',
+		'cyberpersons_account_stats',
+	);
 
-foreach ( $options_to_delete as $option ) {
-	delete_option( $option );
-	delete_site_option( $option );
-}
-
-$cron_hooks = array( 'cyberpanel_email_check_delivery', 'cyberpersons_check_delivery' );
-foreach ( $cron_hooks as $hook ) {
-	$next = wp_next_scheduled( $hook );
-	if ( $next ) {
-		wp_unschedule_event( $next, $hook );
+	foreach ( $options_to_delete as $option_name ) {
+		delete_option( $option_name );
+		delete_site_option( $option_name );
 	}
-	wp_clear_scheduled_hook( $hook );
-}
 
-$uploads = wp_upload_dir( null, false );
-if ( ! empty( $uploads['basedir'] ) ) {
-	$log_dir = trailingslashit( $uploads['basedir'] ) . 'cyberpanel-email';
-	if ( is_dir( $log_dir ) ) {
-		// Remove files, including dotfiles (.htaccess) and the PHP-guarded log.
-		foreach ( array( '*', '.htaccess' ) as $pattern ) {
-			$files = glob( $log_dir . '/' . $pattern );
-			if ( is_array( $files ) ) {
-				foreach ( $files as $file ) {
-					if ( is_file( $file ) ) {
-						@unlink( $file );
+	$cron_hooks = array( 'cyberpanel_email_check_delivery', 'cyberpersons_check_delivery' );
+	foreach ( $cron_hooks as $hook_name ) {
+		$next_event = wp_next_scheduled( $hook_name );
+		if ( $next_event ) {
+			wp_unschedule_event( $next_event, $hook_name );
+		}
+		wp_clear_scheduled_hook( $hook_name );
+	}
+
+	// Clear per-user admin notice transients.
+	$users = get_users( array( 'fields' => 'ID' ) );
+	foreach ( $users as $user_id ) {
+		delete_transient( 'cp_email_notice_' . (int) $user_id );
+	}
+
+	$uploads = wp_upload_dir( null, false );
+	if ( ! empty( $uploads['basedir'] ) ) {
+		$log_dir = trailingslashit( $uploads['basedir'] ) . 'cyberpanel-email';
+		if ( is_dir( $log_dir ) ) {
+			// Remove files, including dotfiles (.htaccess) and the PHP-guarded log.
+			foreach ( array( '*', '.htaccess' ) as $glob_pattern ) {
+				$found_files = glob( $log_dir . '/' . $glob_pattern );
+				if ( is_array( $found_files ) ) {
+					foreach ( $found_files as $file_path ) {
+						if ( is_file( $file_path ) ) {
+							wp_delete_file( $file_path );
+						}
 					}
 				}
 			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.rmdir_rmdir -- WordPress has no equivalent; directory is created by this plugin.
+			@rmdir( $log_dir );
 		}
-		@rmdir( $log_dir );
+	}
+
+	$legacy_log = WP_CONTENT_DIR . '/cyberpersons-mailer.log';
+	if ( file_exists( $legacy_log ) ) {
+		wp_delete_file( $legacy_log );
 	}
 }
 
-$legacy_log = WP_CONTENT_DIR . '/cyberpersons-mailer.log';
-if ( file_exists( $legacy_log ) ) {
-	@unlink( $legacy_log );
-}
+cyberpanel_email_run_uninstall();
