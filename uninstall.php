@@ -61,19 +61,14 @@ function cyberpanel_email_run_uninstall() {
 	if ( ! empty( $uploads['basedir'] ) ) {
 		$log_dir = trailingslashit( $uploads['basedir'] ) . 'cyberpanel-email';
 		if ( is_dir( $log_dir ) ) {
-			// Remove files, including dotfiles (.htaccess) and the PHP-guarded log.
-			foreach ( array( '*', '.htaccess' ) as $glob_pattern ) {
-				$found_files = glob( $log_dir . '/' . $glob_pattern );
-				if ( is_array( $found_files ) ) {
-					foreach ( $found_files as $file_path ) {
-						if ( is_file( $file_path ) ) {
-							wp_delete_file( $file_path );
-						}
-					}
-				}
+			// Delete the directory and its contents recursively via WP_Filesystem.
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.rmdir_rmdir -- WordPress has no equivalent; directory is created by this plugin.
-			@rmdir( $log_dir );
+			if ( WP_Filesystem() ) {
+				global $wp_filesystem;
+				$wp_filesystem->delete( $log_dir, true, 'd' );
+			}
 		}
 	}
 

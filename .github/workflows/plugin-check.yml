@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Build distribution to scan
         run: |
@@ -32,7 +32,7 @@ jobs:
           find /tmp/plugin-dist/email-api-mailer-for-cyberpanel -maxdepth 2 | sort
 
       - name: Run Plugin Check
-        uses: wordpress/plugin-check-action@v1
+        uses: wordpress/plugin-check-action@6f5a57e173c065a394b78688f75df543e4011902 # v1.1.5
         with:
           build-dir: /tmp/plugin-dist/email-api-mailer-for-cyberpanel
           # Warnings are reported but do not fail the build; errors still fail.

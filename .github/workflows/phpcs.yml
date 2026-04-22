@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   phpcs:
     name: WordPress Coding Standards
@@ -13,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@fcafdd6392932010c2bd5094439b8e33be2a8a09 # v2.37.0
         with:
           php-version: '7.4'
           tools: composer, cs2pr
@@ -36,4 +39,9 @@ jobs:
         run: phpcs -i
 
       - name: Run PHPCS
-        run: phpcs --standard=phpcs.xml.dist --report=checkstyle | cs2pr
+        # Write the checkstyle report to a file (instead of piping) so stdout
+        # can never contain progress output ahead of the XML cs2pr needs.
+        run: |
+          phpcs --standard=phpcs.xml.dist --report=checkstyle --report-file=/tmp/phpcs-report.xml || PHPCS_EXIT=$?
+          cat /tmp/phpcs-report.xml | cs2pr
+          exit ${PHPCS_EXIT:-0}

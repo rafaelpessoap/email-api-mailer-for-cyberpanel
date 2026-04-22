@@ -12,8 +12,12 @@
 	<exclude-pattern>/dist/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
+	<!--
+		Deliberately no `<arg value="sp"/>`: `sp` mixes a progress line
+		into stdout, which breaks the CI pipeline that pipes PHPCS's
+		checkstyle XML into cs2pr. We emit only the report.
+	-->
 	<arg name="colors"/>
-	<arg value="sp"/>
 
 	<config name="minimum_supported_wp_version" value="5.7"/>
 	<config name="testVersion" value="7.4-"/>
@@ -33,6 +37,7 @@
 		<exclude name="WordPress.PHP.NoSilencedErrors.Discouraged"/>
 		<!-- Alignment warnings are cosmetic; semantics-focused reviews only. -->
 		<exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning"/>
+		<exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned"/>
 	</rule>
 
 	<rule ref="WordPress.WP.I18n">
