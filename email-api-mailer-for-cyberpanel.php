@@ -3,14 +3,14 @@
  * Plugin Name:       Email API Mailer for Cyberpanel
  * Plugin URI:        https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel
  * Description:       Send WordPress emails through the Cyberpanel transactional email REST API, replacing the default wp_mail(). Includes smart delivery tracking, account statistics dashboard, and graceful fallback to the standard PHP mailer when disabled. Not affiliated with Cyberpanel.
- * Version:           2.0.3
+ * Version:           2.0.4
  * Author:            Rafael Pessoa
  * Author URI:        https://arsenalcraft.com.br
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       email-api-mailer-for-cyberpanel
  * Domain Path:       /languages
- * Requires at least: 5.7
+ * Requires at least: 6.1
  * Tested up to:      6.9
  * Requires PHP:      7.4
  *
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 	 */
 	final class Cyberpanel_Email_API {
 
-		const VERSION      = '2.0.3';
+		const VERSION      = '2.0.4';
 		const TEXT_DOMAIN  = 'email-api-mailer-for-cyberpanel';
 		const API_BASE     = 'https://platform.cyberpersons.com/email/v1';
 		const SLUG         = 'cyberpanel-api-email';
@@ -67,9 +67,14 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 
 		/**
 		 * Bootstrap hooks.
+		 *
+		 * Translations are loaded automatically by WordPress via the
+		 * just-in-time loader. Since WP 6.1 it also inspects the plugin's
+		 * own `languages/` folder when `Domain Path` is declared in the
+		 * header, so no explicit `load_plugin_textdomain()` call is needed
+		 * for any WordPress version we support (6.1+).
 		 */
 		private function __construct() {
-			add_action( 'init', array( $this, 'load_textdomain' ) );
 			add_action( 'admin_init', array( $this, 'maybe_migrate_legacy_options' ) );
 			add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 			add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -96,22 +101,6 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 			);
 			array_unshift( $links, $settings_link );
 			return $links;
-		}
-
-		/**
-		 * Load bundled translations.
-		 *
-		 * Needed so users who install the plugin from GitHub (outside the WP
-		 * Plugin Directory) still get the bundled pt_BR `.mo` loaded. On sites
-		 * installing through wordpress.org the just-in-time loader also finds
-		 * translations under WP_LANG_DIR/plugins/, so both delivery paths work.
-		 */
-		public function load_textdomain() {
-			load_plugin_textdomain(
-				self::TEXT_DOMAIN,
-				false,
-				dirname( plugin_basename( __FILE__ ) ) . '/languages'
-			);
 		}
 
 		/**

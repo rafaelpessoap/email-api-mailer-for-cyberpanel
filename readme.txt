@@ -1,10 +1,10 @@
 === Email API Mailer for Cyberpanel ===
 Contributors: rafaelpessoap
 Tags: email, smtp, transactional email, cyberpanel, wp_mail
-Requires at least: 5.7
+Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,11 @@ Under `wp-content/uploads/cyberpanel-email/cyberpanel-email.log.php`. The file s
 3. Delivery tracking panel and colored activity log.
 
 == Changelog ==
+
+= 2.0.4 =
+* Removed the explicit `load_plugin_textdomain()` call — redundant since the WordPress just-in-time loader (6.1+) automatically loads translations from the plugin's own `languages/` directory when `Domain Path` is declared.
+* Bumped minimum WordPress version from 5.7 to 6.1 to match the just-in-time translation loader that the plugin now relies on. Both current and legacy users targeted are comfortably above this floor.
+* Plugin now passes the official WordPress Plugin Check with zero warnings and zero errors.
 
 = 2.0.3 =
 * Documentation: added an explicit "Contributing and community" section to the readme with pointers to the public GitHub repository, issue tracker, security policy and contribution guide. No code changes.

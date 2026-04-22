@@ -21,7 +21,7 @@ For local testing, symlink or copy the folder into a WordPress instance's `wp-co
 
 ## Coding standards
 
-- Target **PHP 7.4+** and **WordPress 5.7+**.
+- Target **PHP 7.4+** and **WordPress 6.1+**.
 - Follow the [WordPress PHP Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/). A `phpcs.xml.dist` is included for automated checks.
 - Every user-facing string must be translatable via `__()`, `esc_html__()`, `esc_attr__()` or `_e()` with the text domain `email-api-mailer-for-cyberpanel`.
 - Every output must be escaped at the point of output (`esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses_post()` as appropriate).

@@ -29,6 +29,10 @@ cyberpersons-mailer.log
 error_log
 debug.log
 
+# === Relatórios exportados pelo plugin "Plugin Check" (naming do WP.org) ===
+*-php-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9].md
+plugin-check-report-*.md
+
 # === Secrets e configs locais ===
 .env
 .env.*

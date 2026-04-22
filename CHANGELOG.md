@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2026-04-22
+
+### Changed
+
+- Removed the explicit `load_plugin_textdomain()` call. WordPress's just-in-time loader (WP 6.1+) already auto-loads translations from the plugin's own `languages/` directory when `Domain Path` is declared, so the call was redundant and triggered a Plugin Check warning for users running the official plugin-check tool.
+- Bumped minimum WordPress version from 5.7 to 6.1 to match the just-in-time translation loader behavior the plugin now relies on. WP 6.1 was released November 2022 and covers the vast majority of installations.
+
+### Fixed
+
+- Plugin now returns **0 errors and 0 warnings** when run through the official WordPress Plugin Check tool.
+
 ## [2.0.3] - 2026-04-22
 
 ### Documentation

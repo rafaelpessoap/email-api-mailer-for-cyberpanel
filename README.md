@@ -1,7 +1,7 @@
 # Email API Mailer for Cyberpanel
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
-[![WordPress](https://img.shields.io/badge/WordPress-5.7%2B-0073aa.svg)](https://wordpress.org)
+[![WordPress](https://img.shields.io/badge/WordPress-6.1%2B-0073aa.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4.svg)](https://www.php.net)
 
 A WordPress plugin that replaces `wp_mail()` with the [Cyberpanel](https://cyberpanel.net) transactional email REST API. Includes smart delivery tracking, an account statistics dashboard and a graceful fallback to the default WordPress mailer.
@@ -25,7 +25,7 @@ I run several WordPress sites on servers managed with Cyberpanel and wanted to u
 
 ## Requirements
 
-- WordPress 5.7 or newer (uses the `pre_wp_mail` filter added in 5.7)
+- WordPress 6.1 or newer (uses the `pre_wp_mail` filter + just-in-time translation loader introduced in 6.1)
 - PHP 7.4 or newer
 - A Cyberpanel account with an API key and at least one verified sending domain
 
