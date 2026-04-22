@@ -1,0 +1,59 @@
+# === Claude Code / contexto interno de dev (NUNCA publicar) ===
+CLAUDE.md
+.claude/
+memory/
+
+# === macOS / Dropbox ===
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+Icon?
+.Spotlight-V100
+.Trashes
+
+# === Editores / IDEs ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.buildpath
+.settings/
+nbproject/
+
+# === Logs e estado local ===
+*.log
+cyberpersons-mailer.log
+error_log
+debug.log
+
+# === Secrets e configs locais ===
+.env
+.env.*
+*.pem
+*.key
+wp-config.php
+secrets.json
+credentials*
+
+# === Dependências de build (caso sejam adicionadas no futuro) ===
+/vendor/
+/node_modules/
+composer.lock
+package-lock.json
+yarn.lock
+.phpunit.result.cache
+.phpunit.cache/
+
+# === Artefatos de release / distribuição ===
+/build/
+/dist/
+/release/
+*.zip
+*.tar.gz
+
+# === Ambientes de teste WP local ===
+wordpress/
+wp-content/

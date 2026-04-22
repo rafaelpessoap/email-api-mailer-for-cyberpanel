@@ -1,0 +1,32 @@
+# Files excluded when packaging the plugin for distribution
+# (used by 10up/action-wordpress-plugin-deploy and similar tools).
+
+/.git
+/.github
+/.gitignore
+/.distignore
+/.wordpress-org
+/.editorconfig
+/.idea
+/.vscode
+/.DS_Store
+/CLAUDE.md
+/CONTRIBUTING.md
+/SECURITY.md
+/CHANGELOG.md
+/phpcs.xml
+/phpcs.xml.dist
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/node_modules
+/vendor
+/tests
+/bin
+/build
+/dist
+/release
+*.zip
+*.tar.gz
+*.log

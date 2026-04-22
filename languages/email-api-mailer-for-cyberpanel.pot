@@ -1,0 +1,174 @@
+# Copyright (C) 2026 Rafael Pessoa
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Email API Mailer for Cyberpanel 2.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel/issues\n"
+"POT-Creation-Date: 2026-04-22 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: email-api-mailer-for-cyberpanel\n"
+
+msgid "Email API Mailer"
+msgstr ""
+
+msgid "The API key contains invalid characters."
+msgstr ""
+
+msgid "You do not have permission to access this page."
+msgstr ""
+
+msgid "Email API Mailer for Cyberpanel"
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "Send emails through the Cyberpanel API"
+msgstr ""
+
+msgid "When disabled, WordPress uses its default mailer (PHP mail / SMTP)."
+msgstr ""
+
+msgid "API Key"
+msgstr ""
+
+msgid "Defined via CYBERPANEL_EMAIL_API_KEY in wp-config.php"
+msgstr ""
+
+msgid "API key created in your Cyberpanel account. For extra security, define CYBERPANEL_EMAIL_API_KEY in wp-config.php instead of storing it in the database."
+msgstr ""
+
+msgid "Sender Email"
+msgstr ""
+
+msgid "Default sender address (must belong to a verified domain on the Cyberpanel account)."
+msgstr ""
+
+msgid "Sender Name"
+msgstr ""
+
+msgid "Name displayed as the sender."
+msgstr ""
+
+msgid "Save Settings"
+msgstr ""
+
+msgid "Send Test Email"
+msgstr ""
+
+msgid "Recipient"
+msgstr ""
+
+msgid "Send Test"
+msgstr ""
+
+msgid "Delivery Tracking"
+msgstr ""
+
+msgid "Next check:"
+msgstr ""
+
+msgid "None scheduled (one will be created on the next email send)."
+msgstr ""
+
+msgid "Pending messages:"
+msgstr ""
+
+msgid "Check Now"
+msgstr ""
+
+msgid "Account statistics are not yet available. They will be fetched during the next delivery check."
+msgstr ""
+
+msgid "Cyberpanel Account Dashboard"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "Plan"
+msgstr ""
+
+msgid "Reputation"
+msgstr ""
+
+msgid "Verified domains"
+msgstr ""
+
+msgid "Rate limit"
+msgstr ""
+
+msgid "day"
+msgstr ""
+
+msgid "Monthly Usage"
+msgstr ""
+
+msgid "Sent"
+msgstr ""
+
+msgid "Remaining"
+msgstr ""
+
+msgid "Delivered"
+msgstr ""
+
+msgid "Bounces"
+msgstr ""
+
+msgid "Engagement"
+msgstr ""
+
+msgid "Opened"
+msgstr ""
+
+msgid "Clicked"
+msgstr ""
+
+#. translators: 1: percentage used, 2: last update date/time
+#, php-format
+msgid "%1$s%% of monthly quota used | Updated on %2$s"
+msgstr ""
+
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+msgid "Invalid recipient address."
+msgstr ""
+
+#. translators: 1: site name, 2: current date/time
+#, php-format
+msgid "[%1$s] Cyberpanel API Email test - %2$s"
+msgstr ""
+
+msgid "Email Test"
+msgstr ""
+
+msgid "This email was sent through the Cyberpanel API."
+msgstr ""
+
+msgid "Site:"
+msgstr ""
+
+msgid "Date/time:"
+msgstr ""
+
+#. translators: %s: recipient email
+#, php-format
+msgid "Test email successfully sent to %s."
+msgstr ""
+
+msgid "Failed to send test email."
+msgstr ""
+
+msgid "Delivery check executed."
+msgstr ""
+
+msgid "Send & Delivery Log (last 30)"
+msgstr ""

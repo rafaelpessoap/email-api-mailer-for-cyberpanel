@@ -1,0 +1,176 @@
+# Brazilian Portuguese translation for Email API Mailer for Cyberpanel.
+# Copyright (C) 2026 Rafael Pessoa
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Email API Mailer for Cyberpanel 2.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel/issues\n"
+"POT-Creation-Date: 2026-04-22 12:00+0000\n"
+"PO-Revision-Date: 2026-04-22 12:00+0000\n"
+"Last-Translator: Rafael Pessoa\n"
+"Language-Team: Brazilian Portuguese\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Domain: email-api-mailer-for-cyberpanel\n"
+
+msgid "Email API Mailer"
+msgstr "Email API Mailer"
+
+msgid "The API key contains invalid characters."
+msgstr "A chave da API contém caracteres inválidos."
+
+msgid "You do not have permission to access this page."
+msgstr "Você não tem permissão para acessar esta página."
+
+msgid "Email API Mailer for Cyberpanel"
+msgstr "Cyberpanel API Email para WordPress"
+
+msgid "Enable"
+msgstr "Ativar"
+
+msgid "Send emails through the Cyberpanel API"
+msgstr "Enviar emails pela API do Cyberpanel"
+
+msgid "When disabled, WordPress uses its default mailer (PHP mail / SMTP)."
+msgstr "Quando desativado, o WordPress usa o método padrão de envio (PHP mail / SMTP)."
+
+msgid "API Key"
+msgstr "Chave da API"
+
+msgid "Defined via CYBERPANEL_EMAIL_API_KEY in wp-config.php"
+msgstr "Definida via CYBERPANEL_EMAIL_API_KEY no wp-config.php"
+
+msgid "API key created in your Cyberpanel account. For extra security, define CYBERPANEL_EMAIL_API_KEY in wp-config.php instead of storing it in the database."
+msgstr "Chave da API criada na sua conta Cyberpanel. Para maior segurança, defina CYBERPANEL_EMAIL_API_KEY no wp-config.php em vez de armazená-la no banco de dados."
+
+msgid "Sender Email"
+msgstr "Email do remetente"
+
+msgid "Default sender address (must belong to a verified domain on the Cyberpanel account)."
+msgstr "Endereço padrão de envio (precisa pertencer a um domínio verificado na conta Cyberpanel)."
+
+msgid "Sender Name"
+msgstr "Nome do remetente"
+
+msgid "Name displayed as the sender."
+msgstr "Nome que aparece como remetente."
+
+msgid "Save Settings"
+msgstr "Salvar configurações"
+
+msgid "Send Test Email"
+msgstr "Enviar email de teste"
+
+msgid "Recipient"
+msgstr "Destinatário"
+
+msgid "Send Test"
+msgstr "Enviar teste"
+
+msgid "Delivery Tracking"
+msgstr "Rastreamento de entrega"
+
+msgid "Next check:"
+msgstr "Próxima verificação:"
+
+msgid "None scheduled (one will be created on the next email send)."
+msgstr "Nenhuma agendada (será criada ao enviar o próximo email)."
+
+msgid "Pending messages:"
+msgstr "Mensagens pendentes:"
+
+msgid "Check Now"
+msgstr "Verificar agora"
+
+msgid "Account statistics are not yet available. They will be fetched during the next delivery check."
+msgstr "Estatísticas da conta ainda não disponíveis. Serão carregadas na próxima verificação de entrega."
+
+msgid "Cyberpanel Account Dashboard"
+msgstr "Painel da conta Cyberpanel"
+
+msgid "Account"
+msgstr "Conta"
+
+msgid "Plan"
+msgstr "Plano"
+
+msgid "Reputation"
+msgstr "Reputação"
+
+msgid "Verified domains"
+msgstr "Domínios verificados"
+
+msgid "Rate limit"
+msgstr "Limite de requisições"
+
+msgid "day"
+msgstr "dia"
+
+msgid "Monthly Usage"
+msgstr "Uso mensal"
+
+msgid "Sent"
+msgstr "Enviados"
+
+msgid "Remaining"
+msgstr "Restantes"
+
+msgid "Delivered"
+msgstr "Entregues"
+
+msgid "Bounces"
+msgstr "Bounces"
+
+msgid "Engagement"
+msgstr "Engajamento"
+
+msgid "Opened"
+msgstr "Abertos"
+
+msgid "Clicked"
+msgstr "Clicados"
+
+#. translators: 1: percentage used, 2: last update date/time
+#, php-format
+msgid "%1$s%% of monthly quota used | Updated on %2$s"
+msgstr "%1$s%% do limite mensal utilizado | Atualizado em %2$s"
+
+msgid "You do not have permission to perform this action."
+msgstr "Você não tem permissão para executar esta ação."
+
+msgid "Invalid recipient address."
+msgstr "Endereço de destinatário inválido."
+
+#. translators: 1: site name, 2: current date/time
+#, php-format
+msgid "[%1$s] Cyberpanel API Email test - %2$s"
+msgstr "[%1$s] Teste Cyberpanel API Email - %2$s"
+
+msgid "Email Test"
+msgstr "Teste de email"
+
+msgid "This email was sent through the Cyberpanel API."
+msgstr "Este email foi enviado via API do Cyberpanel."
+
+msgid "Site:"
+msgstr "Site:"
+
+msgid "Date/time:"
+msgstr "Data/hora:"
+
+#. translators: %s: recipient email
+#, php-format
+msgid "Test email successfully sent to %s."
+msgstr "Email de teste enviado com sucesso para %s."
+
+msgid "Failed to send test email."
+msgstr "Falha ao enviar email de teste."
+
+msgid "Delivery check executed."
+msgstr "Verificação de entrega executada."
+
+msgid "Send & Delivery Log (last 30)"
+msgstr "Log de envios e entregas (últimos 30)"
