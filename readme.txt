@@ -1,10 +1,10 @@
 === Email API Mailer for Cyberpanel ===
-Contributors: rafaelpessoap
+Contributors: rafaelzezao
 Tags: email, smtp, transactional email, cyberpanel, wp_mail
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,11 @@ Under `wp-content/uploads/cyberpanel-email/cyberpanel-email.log.php`. The file s
 3. Delivery tracking panel and colored activity log.
 
 == Changelog ==
+
+= 2.0.5 =
+* Boolean option sanitizer now uses `rest_sanitize_boolean()` instead of a plain PHP cast, so submitted strings like `"false"` are stored as the boolean `false` rather than the truthy string.
+* Removed the `WP_CONTENT_DIR` fallback in the log path resolver and dropped the legacy v1.x log cleanup that referenced `WP_CONTENT_DIR`. The plugin now relies solely on `wp_upload_dir()` to determine where to write its log directory, matching WordPress.org guidelines for determining content locations.
+* Corrected the `Contributors` slug in `readme.txt` to match the WordPress.org account that owns this plugin.
 
 = 2.0.4 =
 * Removed the explicit `load_plugin_textdomain()` call — redundant since the WordPress just-in-time loader (6.1+) automatically loads translations from the plugin's own `languages/` directory when `Domain Path` is declared.

@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2026-04-30
+
+### Changed
+
+- Boolean option sanitizer now uses `rest_sanitize_boolean()` instead of a plain PHP `(bool)` cast. Plain casting treats any non-empty string as `true`, so values like `"false"`, `"0"` or `"off"` would have been stored as `true`. `rest_sanitize_boolean()` normalizes those to boolean `false` as expected.
+- Log path resolver no longer falls back to `WP_CONTENT_DIR . '/uploads'` when `wp_upload_dir()` does not return a `basedir`. The plugin now relies solely on `wp_upload_dir()` and gracefully skips logging if the uploads directory is unavailable, matching the WordPress.org guideline on determining content locations.
+- Removed the legacy v1.x log file cleanup from `uninstall.php` (it referenced `WP_CONTENT_DIR` to find a file that only ever existed on internal pre-2.0.0 installations).
+
+### Fixed
+
+- `Contributors` slug in `readme.txt` now matches the WordPress.org account that owns the plugin (`rafaelzezao`), so the directory page lists the correct contributor.
+
 ## [2.0.4] - 2026-04-22
 
 ### Changed

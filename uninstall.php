@@ -71,11 +71,6 @@ function cyberpanel_email_run_uninstall() {
 			}
 		}
 	}
-
-	$legacy_log = WP_CONTENT_DIR . '/cyberpersons-mailer.log';
-	if ( file_exists( $legacy_log ) ) {
-		wp_delete_file( $legacy_log );
-	}
 }
 
 cyberpanel_email_run_uninstall();

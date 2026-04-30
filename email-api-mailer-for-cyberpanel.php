@@ -3,7 +3,7 @@
  * Plugin Name:       Email API Mailer for Cyberpanel
  * Plugin URI:        https://github.com/rafaelpessoap/email-api-mailer-for-cyberpanel
  * Description:       Send WordPress emails through the Cyberpanel transactional email REST API, replacing the default wp_mail(). Includes smart delivery tracking, account statistics dashboard, and graceful fallback to the standard PHP mailer when disabled. Not affiliated with Cyberpanel.
- * Version:           2.0.4
+ * Version:           2.0.5
  * Author:            Rafael Pessoa
  * Author URI:        https://arsenalcraft.com.br
  * License:           GPL v2 or later
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 	 */
 	final class Cyberpanel_Email_API {
 
-		const VERSION      = '2.0.4';
+		const VERSION      = '2.0.5';
 		const TEXT_DOMAIN  = 'email-api-mailer-for-cyberpanel';
 		const API_BASE     = 'https://platform.cyberpersons.com/email/v1';
 		const SLUG         = 'cyberpanel-api-email';
@@ -179,17 +179,21 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 		const LOG_GUARD = "<?php exit; ?>\n";
 
 		/**
-		 * Resolve the protected log file path under wp-content/uploads.
+		 * Resolve the protected log file path under the uploads directory.
 		 *
 		 * The file uses a .log.php extension so the PHP interpreter handles it
-		 * before any static-file disclosure is possible.
+		 * before any static-file disclosure is possible. Returns an empty
+		 * string if WordPress cannot determine the uploads location, in which
+		 * case the caller skips logging gracefully.
 		 *
-		 * @return string Absolute path (may not yet exist).
+		 * @return string Absolute path (may not yet exist), or '' on failure.
 		 */
 		public static function get_log_file() {
 			$uploads = wp_upload_dir( null, false );
-			$base    = isset( $uploads['basedir'] ) ? $uploads['basedir'] : WP_CONTENT_DIR . '/uploads';
-			return trailingslashit( $base ) . 'cyberpanel-email/cyberpanel-email.log.php';
+			if ( empty( $uploads['basedir'] ) ) {
+				return '';
+			}
+			return trailingslashit( $uploads['basedir'] ) . 'cyberpanel-email/cyberpanel-email.log.php';
 		}
 
 		/**
@@ -201,7 +205,10 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 		 */
 		private static function ensure_log_dir() {
 			$log_file = self::get_log_file();
-			$dir      = dirname( $log_file );
+			if ( '' === $log_file ) {
+				return;
+			}
+			$dir = dirname( $log_file );
 
 			if ( ! file_exists( $dir ) ) {
 				wp_mkdir_p( $dir );
@@ -323,11 +330,15 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 		/**
 		 * Coerce an option value to boolean.
 		 *
+		 * Uses rest_sanitize_boolean() so submitted strings like "false", "0",
+		 * "no" and "off" are correctly stored as the boolean false (a plain
+		 * (bool) cast would treat them as the truthy non-empty string).
+		 *
 		 * @param mixed $value Raw value.
 		 * @return bool
 		 */
 		public function sanitize_bool( $value ) {
-			return (bool) $value;
+			return rest_sanitize_boolean( $value );
 		}
 
 		/**
@@ -1094,6 +1105,9 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 		 */
 		private static function log( $status, $to, $subject, $detail = '' ) {
 			$log_file = self::get_log_file();
+			if ( '' === $log_file ) {
+				return;
+			}
 			if ( ! file_exists( $log_file ) ) {
 				self::ensure_log_dir();
 			}
@@ -1125,7 +1139,7 @@ if ( ! class_exists( 'Cyberpanel_Email_API' ) ) {
 		 */
 		private function render_log() {
 			$log_file = self::get_log_file();
-			if ( ! file_exists( $log_file ) ) {
+			if ( '' === $log_file || ! file_exists( $log_file ) ) {
 				return;
 			}
 
